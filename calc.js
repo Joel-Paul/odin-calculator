@@ -20,9 +20,9 @@ function createDigits() {
   // Add '0', '.', and '=' buttons first.
   const row = document.createElement('div');
   row.classList.add('row');
-  row.appendChild(createButton(0));
-  row.appendChild(createButton('.'));
-  row.appendChild(createButton('='));
+  row.appendChild(createButton(0, 'input'));
+  row.appendChild(createButton('.', 'input'));
+  row.appendChild(createButton('=', 'operator'));
   digits.appendChild(row);
 
   // Create a 3x3 of numbers 1-9.
@@ -32,7 +32,7 @@ function createDigits() {
 }
 
 function createOperators() {
-  OPS.forEach(op => operators.appendChild(createButton(op)));
+  OPS.forEach(op => operators.appendChild(createButton(op, 'operator')));
   return operators;
 }
 
@@ -40,15 +40,15 @@ function createNumRow(rowIndex) {
   const row = document.createElement('div');
   row.classList.add('row');
   for (let x = 0; x < 3; x++) {
-    row.appendChild(createButton(3 * rowIndex + x + 1));
+    row.appendChild(createButton(3 * rowIndex + x + 1, 'input'));
   }
   return row;
 }
 
-function createButton(value) {
+function createButton(value, classList) {
   const numButton = document.createElement('button');
-  numButton.classList.add('num');
   numButton.innerText = value;
+  if (classList != undefined) numButton.classList.add(classList);
   return numButton;
 }
 

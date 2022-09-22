@@ -3,20 +3,28 @@ const OP_ADD = '+';
 const OP_SUB = '-';
 const OP_MUL = '*';
 const OP_DIV = '/';
-
-const OPS = [OP_ADD, OP_SUB, OP_MUL, OP_DIV];
+const OP_EQL = '=';
 
 const CLASS_IN = 'input';
 const CLASS_OP = 'operator';
 
 const output = document.querySelector('.output');
 
+const del = document.querySelector('.del');
+const ac = document.querySelector('.ac');
+
 const digits = document.querySelector('.digits');
 const operators = document.querySelector('.operators');
 
 let outputText = '';
 
+setupEvents();
 createNumpad();
+
+function setupEvents() {
+  del.addEventListener('click', clearCurrent);
+  ac.addEventListener('click', resetCalculator);
+}
 
 function createNumpad() {
   createDigits();
@@ -29,7 +37,7 @@ function createDigits() {
   row.classList.add('row');
   row.appendChild(createButton(0, CLASS_IN));
   row.appendChild(createButton('.', CLASS_IN));
-  row.appendChild(createButton('=', CLASS_OP));
+  row.appendChild(createButton(OP_EQL, CLASS_OP));
   digits.appendChild(row);
 
   // Create a 3x3 of numbers 1-9.
@@ -39,7 +47,8 @@ function createDigits() {
 }
 
 function createOperators() {
-  OPS.forEach(op => operators.appendChild(createButton(op, CLASS_OP)));
+  const ops = [OP_ADD, OP_SUB, OP_MUL, OP_DIV];
+  ops.forEach(op => operators.appendChild(createButton(op, CLASS_OP)));
   return operators;
 }
 
@@ -70,7 +79,17 @@ function clickedButton(e) {
 }
 
 function updateDisplay() {
-  output.innerHTML = outputText;
+  output.innerHTML = outputText === '' ? '0' : outputText;
+}
+
+function clearCurrent() {
+  outputText = '';
+  updateDisplay();
+}
+
+function resetCalculator() {
+  outputText = '';
+  updateDisplay();
 }
 
 function operate(operator, num1, num2) {

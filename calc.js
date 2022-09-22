@@ -6,8 +6,15 @@ const OP_DIV = '/';
 
 const OPS = [OP_ADD, OP_SUB, OP_MUL, OP_DIV];
 
+const CLASS_IN = 'input';
+const CLASS_OP = 'operator';
+
+const output = document.querySelector('.output');
+
 const digits = document.querySelector('.digits');
 const operators = document.querySelector('.operators');
+
+let outputText = '';
 
 createNumpad();
 
@@ -20,9 +27,9 @@ function createDigits() {
   // Add '0', '.', and '=' buttons first.
   const row = document.createElement('div');
   row.classList.add('row');
-  row.appendChild(createButton(0, 'input'));
-  row.appendChild(createButton('.', 'input'));
-  row.appendChild(createButton('=', 'operator'));
+  row.appendChild(createButton(0, CLASS_IN));
+  row.appendChild(createButton('.', CLASS_IN));
+  row.appendChild(createButton('=', CLASS_OP));
   digits.appendChild(row);
 
   // Create a 3x3 of numbers 1-9.
@@ -32,7 +39,7 @@ function createDigits() {
 }
 
 function createOperators() {
-  OPS.forEach(op => operators.appendChild(createButton(op, 'operator')));
+  OPS.forEach(op => operators.appendChild(createButton(op, CLASS_OP)));
   return operators;
 }
 
@@ -40,7 +47,7 @@ function createNumRow(rowIndex) {
   const row = document.createElement('div');
   row.classList.add('row');
   for (let x = 0; x < 3; x++) {
-    row.appendChild(createButton(3 * rowIndex + x + 1, 'input'));
+    row.appendChild(createButton(3 * rowIndex + x + 1, CLASS_IN));
   }
   return row;
 }
@@ -49,7 +56,21 @@ function createButton(value, classList) {
   const numButton = document.createElement('button');
   numButton.innerText = value;
   if (classList != undefined) numButton.classList.add(classList);
+  numButton.addEventListener('click', clickedButton);
   return numButton;
+}
+
+function clickedButton(e) {
+  const classList = e.target.classList;
+  if (classList.contains(CLASS_IN)) {
+    outputText += e.target.innerText;
+  } else if (classList.contains(CLASS_OP)) {
+  }
+  updateDisplay();
+}
+
+function updateDisplay() {
+  output.innerHTML = outputText;
 }
 
 function operate(operator, num1, num2) {

@@ -1,13 +1,63 @@
 
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.calculator {
+  display: flex;
+  flex-direction: column;
+
+  width: 300px;
+  height: 400px;
+  border-style: solid;
+  border-width: 1px;
+  border-color: red;
+}
+
+.display {
+  border-style: solid;
+  border-width: 1px;
+  border-color: green;
+}
+
 .numpad {
   display: flex;
+  flex: 1;
+
+  border-style: solid;
+  border-width: 1px;
+  border-color: blue;
+}
+
+.digits {
+  display: flex;
   flex-direction: column-reverse;
+  flex: 3;
+
+  border-style: solid;
+  border-width: 1px;
+  border-color: yellow;
 }
 
 .row {
   display: flex;
+  flex: 1;
+}
+
+.operators {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
 }
 
 .num {
-  padding: 32px;
+  flex: 1;
 }

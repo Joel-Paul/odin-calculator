@@ -4,27 +4,52 @@ const OP_SUB = '-';
 const OP_MUL = '*';
 const OP_DIV = '/';
 
-const numpad = document.querySelector('.numpad');
+const OPS = [OP_ADD, OP_SUB, OP_MUL, OP_DIV];
+
+const digits = document.querySelector('.digits');
+const operators = document.querySelector('.operators');
 
 createNumpad();
 
 function createNumpad() {
-  // Create a 3x3 of numbers 1-9
+  createDigits();
+  createOperators();
+}
+
+function createDigits() {
+  // Add '0', '.', and '=' buttons first.
+  const row = document.createElement('div');
+  row.classList.add('row');
+  row.appendChild(createNumButton(0));
+  row.appendChild(createNumButton('.'));
+  row.appendChild(createNumButton('='));
+  digits.appendChild(row);
+
+  // Create a 3x3 of numbers 1-9.
   for (let y = 0; y < 3; y++) {
-    numpad.appendChild(createNumRow(y));
+    digits.appendChild(createNumRow(y));
   }
+}
+
+function createOperators() {
+  OPS.forEach(op => operators.appendChild(createNumButton(op)));
+  return operators;
 }
 
 function createNumRow(rowIndex) {
   const row = document.createElement('div');
   row.classList.add('row');
   for (let x = 0; x < 3; x++) {
-    const num = document.createElement('div');
-    num.classList.add('num');
-    num.innerText = 3 * rowIndex + x + 1;
-    row.appendChild(num);
+    row.appendChild(createNumButton(3 * rowIndex + x + 1));
   }
   return row;
+}
+
+function createNumButton(num) {
+  const numButton = document.createElement('button');
+  numButton.classList.add('num');
+  numButton.innerText = num;
+  return numButton;
 }
 
 function operate(operator, num1, num2) {

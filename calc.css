@@ -18,33 +18,32 @@ body {
   width: 300px;
   height: 400px;
   border-style: solid;
-  border-width: 1px;
-  border-color: red;
+  border-width: 2px;
+  border-color: gray;
 }
 
 .display {
-  border-style: solid;
-  border-width: 1px;
-  border-color: green;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-end;
+  flex: 1;
 }
 
-.numpad {
+.top {
   display: flex;
   flex: 1;
+}
 
-  border-style: solid;
-  border-width: 1px;
-  border-color: blue;
+.bottom {
+  display: flex;
+  flex: 4;
 }
 
 .digits {
   display: flex;
   flex-direction: column-reverse;
   flex: 3;
-
-  border-style: solid;
-  border-width: 1px;
-  border-color: yellow;
 }
 
 .row {
@@ -58,6 +57,6 @@ body {
   flex: 1;
 }
 
-.num {
+button {
   flex: 1;
 }

@@ -4,7 +4,28 @@ const OP_SUB = '-';
 const OP_MUL = '*';
 const OP_DIV = '/';
 
-console.log(operate(OP_ADD, 5, 2));
+const numpad = document.querySelector('.numpad');
+
+createNumpad();
+
+function createNumpad() {
+  // Create a 3x3 of numbers 1-9
+  for (let y = 0; y < 3; y++) {
+    numpad.appendChild(createNumRow(y));
+  }
+}
+
+function createNumRow(rowIndex) {
+  const row = document.createElement('div');
+  row.classList.add('row');
+  for (let x = 0; x < 3; x++) {
+    const num = document.createElement('div');
+    num.classList.add('num');
+    num.innerText = 3 * rowIndex + x + 1;
+    row.appendChild(num);
+  }
+  return row;
+}
 
 function operate(operator, num1, num2) {
   switch (operator) {

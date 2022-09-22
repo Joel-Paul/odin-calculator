@@ -1,0 +1,13 @@
+
+.numpad {
+  display: flex;
+  flex-direction: column-reverse;
+}
+
+.row {
+  display: flex;
+}
+
+.num {
+  padding: 32px;
+}

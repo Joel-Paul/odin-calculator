@@ -88,6 +88,10 @@ function clickedButton(e) {
 
 function clickedInput(inputText) {
   if (calculated) resetCalculator();
+  if (inputText === '.') {
+    if (input.includes('.')) return;
+    if (input === '') input = '0';
+  }
   input += inputText;
 }
 

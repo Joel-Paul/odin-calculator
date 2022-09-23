@@ -8,6 +8,7 @@ const OP_EQL = '=';
 const CLASS_IN = 'input';
 const CLASS_OP = 'operator';
 
+const history = document.querySelector('.history');
 const output = document.querySelector('.output');
 
 const del = document.querySelector('.del');
@@ -16,7 +17,11 @@ const ac = document.querySelector('.ac');
 const digits = document.querySelector('.digits');
 const operators = document.querySelector('.operators');
 
-let outputText = '';
+let prevInput = '';
+let input = '';
+let currentOp = '';
+
+let calculated = false;
 
 setupEvents();
 createNumpad();
@@ -71,37 +76,83 @@ function createButton(value, classList) {
 
 function clickedButton(e) {
   const classList = e.target.classList;
+  const innerText = e.target.innerText;
+
   if (classList.contains(CLASS_IN)) {
-    outputText += e.target.innerText;
+    clickedInput(innerText);
   } else if (classList.contains(CLASS_OP)) {
+    clickedOperator(innerText);
   }
   updateDisplay();
 }
 
+function clickedInput(inputText) {
+  if (calculated) resetCalculator();
+  input += inputText;
+}
+
+function clickedOperator(operatorText) {
+  const hasInput = input !== '';
+  const hasPrevInput = prevInput !== '';
+
+  if (operatorText === OP_EQL) {
+    if (calculated || !hasInput) return;
+    calculated = true;
+
+    let result = operate(currentOp, prevInput, input);
+    if (result === undefined) result = input;  // undefined when no operation was used.
+
+    prevInput += currentOp + input;
+    input = result;
+  } else if (hasInput && hasPrevInput) {
+    if (calculated) {
+      // Use this calculation as the previous input.
+      calculated = false;
+      prevInput = input;
+      input = '';
+    } else {
+      // Evaluate this expression and use it as the previous input.
+      prevInput = operate(currentOp, prevInput, input);
+      input = '';
+    }
+  } else if (hasInput) {
+    calculated = false;
+    prevInput = input;
+    input = '';
+  } else if (!hasInput && !hasPrevInput) {
+    prevInput = 0;
+  }
+  currentOp = operatorText;
+}
+
 function updateDisplay() {
-  output.innerHTML = outputText === '' ? '0' : outputText;
+  history.innerHTML = prevInput + currentOp;
+  output.innerHTML = input === '' ? '0' : input;
 }
 
 function clearCurrent() {
-  outputText = '';
+  input = '';
   updateDisplay();
 }
 
 function resetCalculator() {
-  outputText = '';
+  prevInput = '';
+  input = '';
+  currentOp = '';
+  calculated = false;
   updateDisplay();
 }
 
 function operate(operator, num1, num2) {
   switch (operator) {
     case OP_ADD:
-      return add(num1, num2);
+      return add(+num1, +num2);
     case OP_SUB:
-      return subtract(num1, num2);
+      return subtract(+num1, +num2);
     case OP_MUL:
-      return multiply(num1, num2);
+      return multiply(+num1, +num2);
     case OP_DIV:
-      return divide(num1, num2);
+      return divide(+num1, +num2);
   }
 }
 

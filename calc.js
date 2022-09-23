@@ -11,6 +11,7 @@ const CLASS_OP = 'operator';
 const history = document.querySelector('.history');
 const output = document.querySelector('.output');
 
+const back = document.querySelector('.back');
 const del = document.querySelector('.del');
 const ac = document.querySelector('.ac');
 
@@ -27,6 +28,7 @@ setupEvents();
 createNumpad();
 
 function setupEvents() {
+  back.addEventListener('click', removeLastChar);
   del.addEventListener('click', clearCurrent);
   ac.addEventListener('click', resetCalculator);
 }
@@ -132,6 +134,16 @@ function clickedOperator(operatorText) {
 function updateDisplay() {
   history.innerHTML = prevInput + currentOp;
   output.innerHTML = input === '' ? '0' : input;
+}
+
+function removeLastChar() {
+  if (calculated) {
+    const temp = input.toString();
+    resetCalculator();
+    input = temp;
+  }
+  input = input.slice(0, -1);
+  updateDisplay();
 }
 
 function clearCurrent() {

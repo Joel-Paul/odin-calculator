@@ -5,6 +5,10 @@ const OP_MUL = '*';
 const OP_DIV = '/';
 const OP_EQL = '=';
 
+const OPS = [OP_ADD, OP_SUB, OP_MUL, OP_DIV, OP_EQL];
+
+const NEGATE = '+/-';
+
 const CLASS_IN = 'input';
 const CLASS_OP = 'operator';
 
@@ -31,6 +35,9 @@ function setupEvents() {
   back.addEventListener('click', removeLastChar);
   del.addEventListener('click', clearCurrent);
   ac.addEventListener('click', resetCalculator);
+
+  window.addEventListener('keydown', keyDown);
+  window.addEventListener('keyup', keyUp);
 }
 
 function createNumpad() {
@@ -39,12 +46,11 @@ function createNumpad() {
 }
 
 function createDigits() {
-  // Add '0', '.', and '=' buttons first.
+  // Add '0' and '.' buttons first.
   const row = document.createElement('div');
   row.classList.add('row');
-  row.appendChild(createButton(0, CLASS_IN));
+  row.appendChild(createButton(0, CLASS_IN, 'zero'));
   row.appendChild(createButton('.', CLASS_IN));
-  row.appendChild(createButton(OP_EQL, CLASS_OP));
   digits.appendChild(row);
 
   // Create a 3x3 of numbers 1-9.
@@ -54,8 +60,7 @@ function createDigits() {
 }
 
 function createOperators() {
-  const ops = [OP_ADD, OP_SUB, OP_MUL, OP_DIV];
-  ops.forEach(op => operators.appendChild(createButton(op, CLASS_OP)));
+  OPS.forEach(op => operators.appendChild(createButton(op, CLASS_OP)));
   return operators;
 }
 
@@ -68,27 +73,19 @@ function createNumRow(rowIndex) {
   return row;
 }
 
-function createButton(value, classList) {
+function createButton(value, ...classList) {
   const numButton = document.createElement('button');
   numButton.innerText = value;
-  if (classList != undefined) numButton.classList.add(classList);
+  if (classList != undefined) numButton.classList.add(...classList);
   numButton.addEventListener('click', clickedButton);
   return numButton;
 }
 
 function clickedButton(e) {
-  const classList = e.target.classList;
-  const innerText = e.target.innerText;
-
-  if (classList.contains(CLASS_IN)) {
-    clickedInput(innerText);
-  } else if (classList.contains(CLASS_OP)) {
-    clickedOperator(innerText);
-  }
-  updateDisplay();
+  handleKey(e.target.innerText);
 }
 
-function clickedInput(inputText) {
+function setInput(inputText) {
   if (calculated) resetCalculator();
   if (inputText === '.') {
     if (input.includes('.')) return;
@@ -97,7 +94,7 @@ function clickedInput(inputText) {
   input += inputText;
 }
 
-function clickedOperator(operatorText) {
+function setOperator(operatorText) {
   const hasInput = input !== '';
   const hasPrevInput = prevInput !== '';
 
@@ -106,8 +103,6 @@ function clickedOperator(operatorText) {
     calculated = true;
 
     let result = operate(currentOp, prevInput, input);
-    if (result === undefined) result = input;  // undefined when no operation was used.
-
     prevInput += currentOp + input;
     input = result;
   } else if (hasInput && hasPrevInput) {
@@ -131,6 +126,42 @@ function clickedOperator(operatorText) {
   currentOp = operatorText;
 }
 
+function keyDown(e) {
+}
+
+function keyUp(e) {
+  handleKey(e.key);
+}
+
+function handleKey(key) {
+  if (isInput(key)) {
+    setInput(key);
+  } else if (OPS.includes(key)) {
+    setOperator(key);
+  } else {
+    checkSpecialKeys(key);
+  }
+  updateDisplay();
+}
+
+function isInput(string) {
+  return !isNaN(+string) || string === '.';
+}
+
+function checkSpecialKeys(key) {
+  switch (key) {
+    case 'Escape':
+      clearCurrent();
+      break;
+    case 'Backspace':
+      removeLastChar();
+      break;
+    case 'Enter':
+      setOperator(OP_EQL);
+      break;
+  }
+}
+
 function updateDisplay() {
   history.innerHTML = prevInput + currentOp;
   output.innerHTML = input === '' ? '0' : input;
@@ -147,6 +178,7 @@ function removeLastChar() {
 }
 
 function clearCurrent() {
+  if (input === '') resetCalculator();
   input = '';
   updateDisplay();
 }
@@ -169,6 +201,8 @@ function operate(operator, num1, num2) {
       return multiply(+num1, +num2);
     case OP_DIV:
       return divide(+num1, +num2);
+    default:
+      return +num2;
   }
 }
 

@@ -30,20 +30,27 @@ body {
   flex: 1;
 }
 
+.keypad {
+  display: flex;
+  flex: 5;
+  background-color: gray;
+}
+
+.left {
+  display: flex;
+  flex-direction: column;
+  flex: 3;
+}
+
 .top {
   display: flex;
   flex: 1;
 }
 
-.bottom {
-  display: flex;
-  flex: 4;
-}
-
 .digits {
   display: flex;
   flex-direction: column-reverse;
-  flex: 3;
+  flex: 4;
 }
 
 .row {
@@ -59,4 +66,8 @@ body {
 
 button {
   flex: 1;
+}
+
+.zero {
+  flex: 40%;
 }

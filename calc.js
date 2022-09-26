@@ -163,10 +163,10 @@ function formatNumString(input, digits) {
 }
 
 function keyDown(e) {
+  handleKey(e.key);
 }
 
 function keyUp(e) {
-  handleKey(e.key);
 }
 
 function handleKey(key) {

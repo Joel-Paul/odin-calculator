@@ -102,7 +102,12 @@ button {
   margin: 4px;
   text-decoration: none;
   text-align: center;
-  box-shadow: 2px 2px 8px black;
+  box-shadow: 2px 4px lightgray;
+}
+
+button:active {
+  box-shadow: 2px 2px black;
+  transform: translate(2px, 4px);
 }
 
 .back,
@@ -110,11 +115,13 @@ button {
 .ac {
   background-color: darkred;
   color: aliceblue;
+  box-shadow: 2px 4px #b94242;
 }
 
 .operator {
   color:midnightblue;
   background-color: steelblue;
+  box-shadow: 2px 4px #5b94c2
 }
 
 .zero {

@@ -12,6 +12,9 @@ const NEGATE = '+/-';
 const CLASS_IN = 'input';
 const CLASS_OP = 'operator';
 
+const INPUT_DIGITS = 11;
+const HIST_DIGITS = 19;
+
 const history = document.querySelector('.history');
 const output = document.querySelector('.output');
 
@@ -22,14 +25,19 @@ const ac = document.querySelector('.ac');
 const digits = document.querySelector('.digits');
 const operators = document.querySelector('.operators');
 
-let prevInput = '';
-let input = '';
+let prevInput = 0;
+let input = 0;
+
 let currentOp = '';
+
+let prevInputDisplay = '';
+let inputDisplay = '';
 
 let calculated = false;
 
 setupEvents();
 createNumpad();
+resetCalculator()
 
 function setupEvents() {
   back.addEventListener('click', removeLastChar);
@@ -87,43 +95,71 @@ function clickedButton(e) {
 
 function setInput(inputText) {
   if (calculated) resetCalculator();
+  if (inputDisplay.length >= INPUT_DIGITS) return;
   if (inputText === '.') {
-    if (input.includes('.')) return;
-    if (input === '') input = '0';
+    if (inputDisplay.includes('.')) return;
+    if (inputDisplay === '') inputDisplay = '0';
   }
-  input += inputText;
+  inputDisplay += inputText;
+  input = +inputDisplay;
 }
 
 function setOperator(operatorText) {
-  const hasInput = input !== '';
-  const hasPrevInput = prevInput !== '';
+  const hasInput = inputDisplay !== '';
+  const hasPrevInput = prevInputDisplay !== '';
+
+  // To fit two large numbers in the history display, we
+  // need to account for the equals and operation sign (-2).
+  const histLength = (HIST_DIGITS - 2) / 2;
 
   if (operatorText === OP_EQL) {
     if (calculated || !hasInput) return;
     calculated = true;
 
     let result = operate(currentOp, prevInput, input);
-    prevInput += currentOp + input;
+    prevInput = input;
+    prevInputDisplay += currentOp + formatNumString(prevInput, histLength);
     input = result;
+    inputDisplay = formatNumString(input, INPUT_DIGITS);
   } else if (hasInput && hasPrevInput) {
     if (calculated) {
       // Use this calculation as the previous input.
       calculated = false;
       prevInput = input;
-      input = '';
+      prevInputDisplay = formatNumString(prevInput, histLength);
+      input = 0;
+      inputDisplay = '';
     } else {
       // Evaluate this expression and use it as the previous input.
       prevInput = operate(currentOp, prevInput, input);
-      input = '';
+      prevInputDisplay = formatNumString(prevInput, histLength);
+      input = 0;
+      inputDisplay = '';
     }
   } else if (hasInput) {
     calculated = false;
     prevInput = input;
-    input = '';
+    prevInputDisplay = formatNumString(prevInput, histLength);
+    input = 0;
+    inputDisplay = '';
   } else if (!hasInput && !hasPrevInput) {
     prevInput = 0;
+    prevInputDisplay = '0';
   }
   currentOp = operatorText;
+}
+
+function formatNumString(input, digits) {
+  const num = +input;
+  if (num.toString().length >= digits) {
+    // Convert to scientific notation.
+    let numExp = num.toExponential(digits - 5);
+    if (numExp.length > digits) {
+      numExp = num.toExponential(2 * digits - numExp.length - 5);
+    }
+    return numExp;
+  }
+  return num.toString();
 }
 
 function keyDown(e) {
@@ -145,7 +181,7 @@ function handleKey(key) {
 }
 
 function isInput(string) {
-  return !isNaN(+string) || string === '.';
+  return string !== ' ' && (!isNaN(+string) || string === '.');
 }
 
 function checkSpecialKeys(key) {
@@ -163,29 +199,29 @@ function checkSpecialKeys(key) {
 }
 
 function updateDisplay() {
-  history.innerHTML = prevInput + currentOp;
-  output.innerHTML = input === '' ? '0' : input;
+  history.innerHTML = prevInputDisplay + currentOp;
+  output.innerHTML = inputDisplay === '' ? '0' : inputDisplay;
 }
 
 function removeLastChar() {
   if (calculated) {
-    const temp = input.toString();
+    const temp = inputDisplay.toString();
     resetCalculator();
-    input = temp;
+    inputDisplay = temp;
   }
-  input = input.slice(0, -1);
+  inputDisplay = inputDisplay.slice(0, -1);
   updateDisplay();
 }
 
 function clearCurrent() {
-  if (input === '') resetCalculator();
-  input = '';
+  if (inputDisplay === '') resetCalculator();
+  inputDisplay = '';
   updateDisplay();
 }
 
 function resetCalculator() {
-  prevInput = '';
-  input = '';
+  prevInputDisplay = '';
+  inputDisplay = '';
   currentOp = '';
   calculated = false;
   updateDisplay();

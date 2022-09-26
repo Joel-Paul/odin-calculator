@@ -15,6 +15,12 @@ const CLASS_OP = 'operator';
 const INPUT_DIGITS = 11;
 const HIST_DIGITS = 19;
 
+// The number of digits that should be displayed
+// by a single number in the history display.
+// Accounts for the operator and equals symbol (i.e. -2)
+// and dividing by two lets two numbers fit in the display.
+const histLength = Math.floor((HIST_DIGITS - 2) / 2);
+
 const history = document.querySelector('.history');
 const output = document.querySelector('.output');
 
@@ -108,10 +114,6 @@ function setOperator(operatorText) {
   const hasInput = inputDisplay !== '';
   const hasPrevInput = prevInputDisplay !== '';
 
-  // To fit two large numbers in the history display, we
-  // need to account for the equals and operation sign (-2).
-  const histLength = (HIST_DIGITS - 2) / 2;
-
   if (operatorText === OP_EQL) {
     if (calculated || !hasInput) return;
     calculated = true;
@@ -151,7 +153,7 @@ function setOperator(operatorText) {
 
 function formatNumString(input, digits) {
   const num = +input;
-  if (num.toString().length >= digits) {
+  if (num.toString().length > digits) {
     // Convert to scientific notation.
     let numExp = num.toExponential(digits - 5);
     if (numExp.length > digits) {

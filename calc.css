@@ -24,11 +24,8 @@ body {
   background-color: gray;
   padding: 16px;
   border-radius: 16px;
-  border-color: dimgray;
-  border-style: solid;
-  border-width: 8px;
 
-  box-shadow: 16px 16px 32px;
+  box-shadow: 8px 8px dimgray;
 }
 
 .display {

@@ -9,6 +9,9 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+
+  font-family: 'Share Tech Mono', monospace;
+  background-color: #423737;
 }
 
 .calculator {
@@ -16,18 +19,42 @@ body {
   flex-direction: column;
 
   width: 300px;
-  height: 400px;
+  height: 500px;
+
+  background-color: gray;
+  padding: 16px;
+  border-radius: 16px;
+  border-color: black;
   border-style: solid;
-  border-width: 2px;
-  border-color: gray;
+  border-width: 8px;
+
+  box-shadow: 2px 2px 32px;
 }
 
 .display {
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
   align-items: flex-end;
   flex: 1;
+
+  background-color: aliceblue;
+  border-radius: 8px;
+  border-style: solid;
+  border-color: darkslategrey;
+  border-width: 4px;
+  box-shadow: 4px 4px 2px inset darkslategrey;
+
+  margin: 16px 16px 16px;
+}
+
+.history {
+  flex: 1;
+  font-size: 24px;
+}
+
+.output {
+  flex: 2;
+  font-size: 40px;
 }
 
 .keypad {
@@ -66,8 +93,28 @@ body {
 
 button {
   flex: 1;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 24px;
+  border-style: none;
+  border-radius: 16px;
+  margin: 4px;
+  text-decoration: none;
+  text-align: center;
+  box-shadow: 2px 2px 8px black;
+}
+
+.back,
+.del,
+.ac {
+  background-color: darkred;
+  color: aliceblue;
+}
+
+.operator {
+  color:midnightblue;
+  background-color: steelblue;
 }
 
 .zero {
-  flex: 40%;
+  flex: 39%;
 }

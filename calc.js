@@ -5,7 +5,7 @@ const OP_MUL = '*';
 const OP_DIV = '/';
 const OP_EQL = '=';
 
-const OPS = [OP_ADD, OP_SUB, OP_MUL, OP_DIV, OP_EQL];
+const OPS = [OP_DIV, OP_MUL, OP_SUB, OP_ADD, OP_EQL];
 
 const NEGATE = '+/-';
 
